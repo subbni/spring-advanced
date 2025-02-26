@@ -1,6 +1,7 @@
 package org.example.expert.config;
 
 import org.example.expert.domain.auth.exception.AuthException;
+import org.example.expert.domain.common.exception.AdminAccessDeniedException;
 import org.example.expert.domain.common.exception.InvalidRequestException;
 import org.example.expert.domain.common.exception.ServerException;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,12 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(AdminAccessDeniedException.class)
+    public ResponseEntity<Map<String, Object>> handleAdminAccessDeniedException(AdminAccessDeniedException e) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        return getErrorResponse(status, e.getMessage());
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {

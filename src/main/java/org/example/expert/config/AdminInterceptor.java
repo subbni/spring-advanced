@@ -2,6 +2,7 @@ package org.example.expert.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.expert.domain.common.exception.AdminAccessDeniedException;
 import org.example.expert.domain.user.enums.UserRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,8 +25,7 @@ public class AdminInterceptor implements HandlerInterceptor {
         UserRole currentUserRole = UserRole.of((String)request.getAttribute(USER_ROLE));
 
         if(!UserRole.ADMIN.equals(currentUserRole)) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, "관리자만 가능한 작업입니다.");
-            return false;
+            throw new AdminAccessDeniedException("관리자만 가능한 작업입니다.");
         }
 
         logAdminAccess(request);
